@@ -1,0 +1,10 @@
+{
+  "name": "Anicare",
+  "short_name": "Anicare",
+  "description": "Guardería y adopción responsable de mascotas en Telde",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffdfb",
+  "theme_color": "#f4b6c2",
+  "lang": "es"
+}

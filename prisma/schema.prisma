@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Species {
+  DOG
+  CAT
+  RABBIT
+  BIRD
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum AdoptionStatus {
+  AVAILABLE
+  IN_PROCESS
+  ADOPTED
+}
+
+enum ContactReason {
+  RESERVA
+  ADOPCION
+  CONSULTA
+}
+
+model Owner {
+  id           String        @id @default(cuid())
+  fullName     String
+  phone        String
+  email        String        @unique
+  createdAt    DateTime      @default(now())
+  pets         Pet[]
+  reservations Reservation[]
+}
+
+model Pet {
+  id           String        @id @default(cuid())
+  ownerId      String
+  owner        Owner         @relation(fields: [ownerId], references: [id])
+  name         String
+  species      Species
+  vaccinated   Boolean
+  notes        String?
+  createdAt    DateTime      @default(now())
+  reservations Reservation[]
+
+  @@index([ownerId])
+}
+
+model Reservation {
+  id             String            @id @default(cuid())
+  ownerId        String
+  petId          String
+  owner          Owner             @relation(fields: [ownerId], references: [id])
+  pet            Pet               @relation(fields: [petId], references: [id])
+  startDate      DateTime
+  endDate        DateTime
+  days           Int
+  baseDailyPrice Decimal           @db.Decimal(10, 2)
+  extrasDaily    Decimal           @db.Decimal(10, 2)
+  totalPrice     Decimal           @db.Decimal(10, 2)
+  status         ReservationStatus @default(PENDING)
+  notes          String?
+  createdAt      DateTime          @default(now())
+  extras         ReservationExtra[]
+
+  @@index([ownerId])
+  @@index([petId])
+  @@index([startDate, endDate])
+}
+
+model ReservationExtra {
+  id            String      @id @default(cuid())
+  reservationId String
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  type          String
+  dailyPrice    Decimal     @db.Decimal(10, 2)
+
+  @@index([reservationId])
+}
+
+model Animal {
+  id                   String              @id @default(cuid())
+  name                 String
+  species              Species
+  ageMonths            Int
+  size                 String
+  temperament          String
+  healthStatus         String
+  adoptionRequirements String
+  description          String
+  status               AdoptionStatus      @default(AVAILABLE)
+  featured             Boolean             @default(false)
+  imageUrls            String[]
+  imageUrl             String?
+  createdAt            DateTime            @default(now())
+  applications         AdoptionApplication[]
+
+  @@index([species, status])
+  @@index([featured])
+}
+
+model AdoptionApplication {
+  id         String   @id @default(cuid())
+  animalId   String
+  animal     Animal   @relation(fields: [animalId], references: [id])
+  fullName   String
+  phone      String
+  email      String
+  homeType   String?
+  experience String?
+  message    String?
+  createdAt  DateTime @default(now())
+
+  @@index([animalId])
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  fullName  String
+  phone     String
+  email     String
+  reason    ContactReason
+  message   String
+  consent   Boolean
+  createdAt DateTime      @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  consent   Boolean
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  fullName  String
+  quote     String
+  rating    Int      @default(5)
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  excerpt         String
+  content         String
+  published       Boolean  @default(false)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
