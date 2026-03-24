@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
 import { blogPosts } from "@/content/blogPosts";
@@ -24,12 +25,13 @@ export default function BlogPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {blogPosts.map((post) => (
           <article key={post.slug} className="card card-hover overflow-hidden">
-            <div className="relative overflow-hidden rounded-3xl border border-brand-border/80 bg-brand-sand shadow-soft">
-              <img
+            <div className="relative h-48 overflow-hidden rounded-3xl border border-brand-border/80 bg-brand-sand shadow-soft">
+              <Image
                 src={post.coverImage}
                 alt={post.coverAlt}
-                className="h-48 w-full object-cover"
-                loading="lazy"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 33vw"
               />
             </div>
             <div className="mt-4">

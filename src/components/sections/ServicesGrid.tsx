@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 type ServiceCard = {
@@ -11,12 +12,12 @@ type ServiceCard = {
 
 function DogIcon() {
   return (
-    <img
+    <Image
       src="https://png.pngtree.com/png-vector/20191026/ourlarge/pngtree-dog-face-line-icon-vector-png-image_1874330.jpg"
-      alt=""
-      aria-hidden="true"
+      alt="Icono de perro"
+      width={36}
+      height={36}
       className="h-9 w-9 object-contain"
-      decoding="async"
     />
   );
 }

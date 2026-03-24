@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
 import { blogPostMap, blogPosts } from "@/content/blogPosts";
@@ -6,13 +7,14 @@ export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = blogPostMap[params.slug];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = blogPostMap[slug];
 
   return buildMetadata({
     title: post?.title ?? "Artículo",
     description: post?.excerpt ?? "Artículo del blog de Anicare",
-    path: `/blog/${params.slug}`
+    path: `/blog/${slug}`
   });
 }
 
@@ -50,8 +52,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {formatDate(post.date)} · {post.readingTime}
       </p>
 
-      <div className="mt-6 overflow-hidden rounded-3xl border border-brand-border/80 bg-brand-sand shadow-soft">
-        <img src={post.coverImage} alt={post.coverAlt} className="h-64 w-full object-cover" loading="lazy" />
+      <div className="mt-6 h-64 overflow-hidden rounded-3xl border border-brand-border/80 bg-brand-sand shadow-soft">
+        <Image src={post.coverImage} alt={post.coverAlt} fill className="object-cover" sizes="100vw" />
       </div>
 
       <div className="mt-8 space-y-6">

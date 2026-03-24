@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export type AnimalCardData = {
@@ -34,11 +35,12 @@ function AnimalPhoto({ name, imageUrl }: { name: string; imageUrl?: string | nul
     <div className="relative overflow-hidden rounded-3xl border border-brand-border/80 bg-brand-sand shadow-soft">
       <div className="absolute inset-0 bg-[radial-gradient(650px_260px_at_20%_15%,rgba(244,182,194,0.35),transparent_60%),radial-gradient(520px_240px_at_85%_35%,rgba(245,237,226,0.85),transparent_55%)]" />
       <div className="relative aspect-[4/3]">
-        <img
+        <Image
           src={imageSrc}
           alt={`Foto de ${name}`}
-          className="h-full w-full object-cover"
-          loading="lazy"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
     </div>
